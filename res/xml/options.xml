@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+  xmlns:android="http://schemas.android.com/apk/res/android">
+<CheckBoxPreference 
+    android:title="Show volume control"
+    android:key="volumeControl"
+    android:defaultValue="true"/>
+<ListPreference
+	android:title="Notification bar"
+	android:entries="@array/notification_labels"    	
+	android:entryValues="@array/notifications"
+	android:key="notification"
+	android:defaultValue="2"/>
+</PreferenceScreen>

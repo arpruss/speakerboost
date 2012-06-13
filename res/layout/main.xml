@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="5sp"
+    android:paddingRight="5sp" >
+
+    <LinearLayout
+        android:id="@+id/vol_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/vol_value"
+            android:layout_width="50sp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5sp"
+            android:text="Vol.: 100%"
+            android:textSize="16sp" />
+
+        <SeekBar
+            android:id="@+id/vol"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dip"
+            android:layout_marginLeft="00dip"
+            android:layout_marginRight="10dip"
+            android:layout_marginTop="10dip"
+            android:layout_weight="1"
+            android:max="10000" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/boost_value"
+            android:layout_width="50sp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5sp"
+            android:text="Boost: 100%"
+            android:textSize="16sp" />
+
+        <SeekBar
+            android:id="@+id/boost"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dip"
+            android:layout_marginLeft="00dip"
+            android:layout_marginRight="10dip"
+            android:layout_marginTop="10dip"
+            android:layout_weight="1"
+            android:max="10000" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/warn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="10sp"
+        android:paddingBottom="10sp"
+        android:text="Warning: More than 40% boost may damage speakers/hearing." />
+
+    <TextView
+        android:id="@+id/ad"
+        android:layout_width="220sp"
+        android:layout_height="wrap_content"
+        android:background="#B0B0B0"
+        android:paddingBottom="10sp"
+        android:paddingLeft="5sp"
+        android:paddingRight="5sp"
+        android:paddingTop="10sp"
+        android:text="Tap here for more ω-Centauri apps, including the popular ScreenDim dimmer."
+        android:textColor="#0000FF" />
+    
+    <Button 
+        android:id="@+id/options"
+        android:text="More options..."
+        android:textSize="16sp"
+        android:onClick="optionsClick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+</LinearLayout>

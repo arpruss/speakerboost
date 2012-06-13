@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.0"
+   width="185.15376"
+   height="426.49423"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.45.1"
+   sodipodi:docname="Phoneicon.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   sodipodi:docbase="C:\Users\Kyle J. Goldstein\Desktop">
+  <metadata
+     id="metadata9">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs7" />
+  <sodipodi:namedview
+     inkscape:window-height="575"
+     inkscape:window-width="765"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     guidetolerance="10.0"
+     gridtolerance="10.0"
+     objecttolerance="10.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base"
+     inkscape:zoom="0.86073059"
+     inkscape:cx="256"
+     inkscape:cy="219"
+     inkscape:window-x="46"
+     inkscape:window-y="46"
+     inkscape:current-layer="svg2" />
+  <path
+     d="M 183.09042,390.37223 C 178.70582,395.1437 174.32123,399.65726 169.67871,404.29978 C 158.84618,412.94 146.20823,419.77482 132.92548,424.03044 C 113.32376,428.02817 92.948276,427.12546 73.475526,421.58024 C 61.095506,417.84043 50.907756,409.45811 45.104616,398.10976 C -14.732224,283.33653 -14.990134,146.76927 44.072946,31.609177 C 50.907756,18.584351 62.900916,8.6545237 77.086366,4.9147207 C 87.660986,2.2065921 98.235586,0.27221143 108.68124,0.014295134 C 133.1834,-0.37258207 156.65388,7.1070177 176.51352,20.776648 C 178.96373,22.324142 180.51124,25.419153 180.51124,28.514165 C 180.51124,30.061671 179.86644,31.867089 178.96373,33.156671 L 129.4436,115.81919 C 126.99338,120.07483 121.44816,121.62234 117.06356,119.17211 L 90.498076,104.59978 C 88.950576,103.69708 87.403066,103.43915 85.855556,103.43915 C 80.568266,103.43915 76.570536,107.69479 76.570536,112.9821 L 76.570536,112.9821 L 76.570536,311.19161 C 76.570536,316.47891 80.568266,320.73455 85.855556,320.73455 C 87.660986,320.73455 89.466406,320.08974 91.013916,319.18704 L 105.97311,308.9993 C 109.97084,306.54909 114.87127,307.19389 117.96628,310.28889 L 182.70354,377.73429 C 184.25104,379.5397 185.15376,381.732 185.15376,384.18222 C 185.15376,386.37451 184.25104,388.56681 183.09042,390.37223 z "
+     id="path4" />
+</svg>
