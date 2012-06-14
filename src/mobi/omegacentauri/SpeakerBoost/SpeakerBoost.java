@@ -30,6 +30,7 @@ import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -102,6 +103,22 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
     	else
     		i.setData(Uri.parse("http://www.amazon.com/gp/mas/dl/android?p=mobi.omegacentauri.ScreenDim.Full&showAll=1"));            		
     	startActivity(i);    	
+    }
+    
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    	if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+    		am.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_RAISE, 0);
+    		updateVolumeDisplay();
+    		return true;
+    	}
+    	else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+    		am.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_LOWER, 0);
+    		updateVolumeDisplay();
+    		return true;
+    	}
+    		
+    	return super.onKeyDown(keyCode, event);
     }
     
 	@Override
@@ -251,7 +268,6 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
     	}
 		findViewById(R.id.vol_layout).setVisibility(View.VISIBLE);
         final int maxVolume = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-		volumeBar.setProgress(toSlider(am.getStreamVolume(AudioManager.STREAM_MUSIC), 0, maxVolume));
 		volumeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 			
 			@Override
@@ -269,9 +285,13 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
 				updateVolText(progress);
 			}
 		});
-    	
-        
-        
+		updateVolumeDisplay();
+    }
+    
+    private void updateVolumeDisplay() {
+        int p = toSlider(am.getStreamVolume(AudioManager.STREAM_MUSIC), 0, am.getStreamMaxVolume(AudioManager.STREAM_MUSIC)); 
+		volumeBar.setProgress(p);
+		updateVolText(p);
     }
     
     void resize() {
