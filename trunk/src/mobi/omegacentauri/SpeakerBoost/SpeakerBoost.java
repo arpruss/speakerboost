@@ -34,9 +34,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.SeekBar;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
@@ -54,7 +57,7 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
 	private Settings settings;
 	private TextView ad;
 	private AudioManager am;
-	private int maxVolume;
+	private LinearLayout main;
 	
 	static final int NOTIFICATION_ID = 1;
 
@@ -71,7 +74,8 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
         am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
         
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.main);
+		main = (LinearLayout)getLayoutInflater().inflate(R.layout.main, null);
+        setContentView(main);
 
 		options = PreferenceManager.getDefaultSharedPreferences(this);
 		settings = new Settings(this);
@@ -79,7 +83,6 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
     	boostBar = (SeekBar)findViewById(R.id.boost);
     	volumeBar = (SeekBar)findViewById(R.id.vol);    	
         ad = (TextView)findViewById(R.id.ad);
-        findViewById(R.id.options).setVisibility(Options.isKindle()?View.VISIBLE:View.GONE);
         
         ad.setOnClickListener(new OnClickListener(){
 
@@ -271,9 +274,30 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
         
     }
     
+    void resize() {
+    	log("resize1");
+    	LinearLayout ll = main;
+    	log("resize2");
+    	FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams)ll.getLayoutParams();
+    	log("resize3");
+
+    	int h = getWindowManager().getDefaultDisplay().getHeight();
+    	int w = getWindowManager().getDefaultDisplay().getWidth();
+    	
+    	if (w>h) {
+    		lp.setMargins((w-h)/2,0,(w-h)/2,0);
+    		ll.setLayoutParams(lp);
+    	}
+    	else {
+    		lp.setMargins(0,0,0,0);    		
+    	}
+    }
+    
     @Override
     public void onResume() {
     	super.onResume();
+    	
+    	resize();
 
     	settings.load(options);
 

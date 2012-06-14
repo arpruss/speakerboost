@@ -59,14 +59,37 @@
             android:max="10000" />
     </LinearLayout>
 
+    <RelativeLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        >
+   	<ImageButton 
+   	    android:id="@+id/setup_button"
+   	    android:src="@drawable/config"
+   	    android:onClick="optionsClick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+   	    />
     <TextView
         android:id="@+id/warn"
-        android:layout_width="wrap_content"
+        android:layout_width="0dip"
         android:layout_height="wrap_content"
         android:paddingTop="10sp"
         android:paddingBottom="10sp"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@id/setup_button"
+        android:layout_centerVertical="true"
         android:text="Warning: More than 40% boost may damage speakers/hearing." />
-
+   		</RelativeLayout>    
+    
+    <LinearLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" 
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        >
     <TextView
         android:id="@+id/ad"
         android:layout_width="220sp"
@@ -78,13 +101,5 @@
         android:paddingTop="10sp"
         android:text="Tap here for more ω-Centauri apps, including the popular ScreenDim dimmer."
         android:textColor="#0000FF" />
-    
-    <Button 
-        android:id="@+id/options"
-        android:text="More options..."
-        android:textSize="16sp"
-        android:onClick="optionsClick"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        />
+</LinearLayout>    
 </LinearLayout>
