@@ -34,6 +34,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -59,6 +60,7 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
 	private TextView ad;
 	private AudioManager am;
 	private LinearLayout main;
+	private boolean showVolume = true;
 	
 	static final int NOTIFICATION_ID = 1;
 
@@ -81,6 +83,13 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
 		options = PreferenceManager.getDefaultSharedPreferences(this);
 		settings = new Settings(this);
 		
+		boolean o = options.getBoolean(Options.PREF_VOLUME, Options.defaultShowVolume());
+		/* This ensures that the default shows up correctly in the settings screen.
+		 * This should be doable via setDefaultValue() in Options, but somehow that
+		 * wasn't working.
+		 */
+		options.edit().putBoolean(Options.PREF_VOLUME, o).commit();
+
     	boostBar = (SeekBar)findViewById(R.id.boost);
     	volumeBar = (SeekBar)findViewById(R.id.vol);    	
         ad = (TextView)findViewById(R.id.ad);
@@ -108,12 +117,12 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
     	if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-    		am.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_RAISE, 0);
+    		am.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_RAISE, showVolume?0:AudioManager.FLAG_SHOW_UI);
     		updateVolumeDisplay();
     		return true;
     	}
     	else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-    		am.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_LOWER, 0);
+    		am.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_LOWER, showVolume?0:AudioManager.FLAG_SHOW_UI);
     		updateVolumeDisplay();
     		return true;
     	}
@@ -261,11 +270,16 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
     }
 
     private void updateVolume() {
-    	if (!options.getBoolean(Options.PREF_VOLUME, true)) {
-    		findViewById(R.id.vol_layout).setVisibility(View.GONE);
-    		return;
-    		
+    	if (options.getBoolean(Options.PREF_VOLUME, Options.defaultShowVolume())) {
+    		findViewById(R.id.vol_layout).setVisibility(View.VISIBLE);
+    		showVolume = true;
     	}
+    	else {
+    		findViewById(R.id.vol_layout).setVisibility(View.GONE);
+    		showVolume = false;
+    		return;
+    	}
+    	
 		findViewById(R.id.vol_layout).setVisibility(View.VISIBLE);
         final int maxVolume = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 		volumeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
