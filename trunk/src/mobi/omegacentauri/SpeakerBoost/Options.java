@@ -7,8 +7,10 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 public class Options extends PreferenceActivity {
 	public static final String PREF_EQUALIZER_ACTIVE = "equalizerActive";
@@ -27,6 +29,12 @@ public class Options extends PreferenceActivity {
 		super.onCreate(icicle);
 		
 		addPreferencesFromResource(R.xml.options);
+
+		Preference p = getPreferenceScreen().findPreference(PREF_VOLUME);
+		if (p != null) {
+			SpeakerBoost.log("Setting PREF_VOLUME to "+defaultShowVolume());
+			p.setDefaultValue(defaultShowVolume());
+		}
 	}
 	
 	@Override
@@ -51,4 +59,8 @@ public class Options extends PreferenceActivity {
 //			return n;
 		return n;
    	}
+	
+	public static boolean defaultShowVolume() {
+		return isKindle();
+	}
 }
