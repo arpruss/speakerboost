@@ -57,10 +57,12 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
 	private SeekBar boostBar;
 	private SeekBar volumeBar;
 	private Settings settings;
-	private TextView ad;
+//	private TextView ad;
 	private AudioManager am;
 	private LinearLayout main;
 	private boolean showVolume = true;
+	private boolean disable = false;
+	private int versionCode;
 	
 	static final int NOTIFICATION_ID = 1;
 
@@ -74,6 +76,12 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
+		try {
+			versionCode = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
+		} catch (NameNotFoundException e) {
+			versionCode = 0;
+		} 
+		
         am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
         
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -92,16 +100,14 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
 
     	boostBar = (SeekBar)findViewById(R.id.boost);
     	volumeBar = (SeekBar)findViewById(R.id.vol);    	
-        ad = (TextView)findViewById(R.id.ad);
-        
-        ad.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View arg0) {
-				market();
-			}});
-        
-        versionUpdate();
+//        ad = (TextView)findViewById(R.id.ad);
+//        
+//        ad.setOnClickListener(new OnClickListener(){
+//
+//			@Override
+//			public void onClick(View arg0) {
+//				market();
+//			}});
     }
     
     void market() {
@@ -136,7 +142,42 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
 		
 		return true;
 	}
+	
+	private void reloadSettings() {
+		sendMessage(SpeakerBoostService.IncomingHandler.MSG_RELOAD_SETTINGS, 0, 0);
+	}
 
+	private void warning() {
+		AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+
+		settings.boostValue = 0;
+		settings.save(options);
+		settings.disableEqualizer();
+		boostBar.setProgress(0);
+		reloadSettings();
+
+		alertDialog.setTitle("Warning");
+		alertDialog.setMessage(Html.fromHtml(getAssetFile("warning.html")));
+		alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, 
+				"Yes", 
+				new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				options.edit().putInt(Options.PREF_WARNED_LAST_VERSION, versionCode).commit();
+			} });
+		alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, 
+				"No", 
+				new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				SpeakerBoost.this.finish();
+			} });
+		alertDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+			public void onCancel(DialogInterface dialog) {
+			SpeakerBoost.this.finish();
+			} });
+		alertDialog.show();
+
+	}
+	
 	private void message(String title, String msg) {
 		AlertDialog alertDialog = new AlertDialog.Builder(this).create();
 
@@ -157,20 +198,16 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
 	}
 	
 	private void versionUpdate() {
-		int versionCode;
-		try {
-			versionCode = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
-		} catch (NameNotFoundException e) {
-			versionCode = 0;
-		} 
-		
 		log("version "+versionCode);
 		
 		if (options.getInt(Options.PREF_LAST_VERSION, 0) != versionCode) {
 			options.edit().putInt(Options.PREF_LAST_VERSION, versionCode).commit();
 			show("Change log", "changelog.html");
 		}
-			
+		
+		if (options.getInt(Options.PREF_WARNED_LAST_VERSION, 0) != versionCode) {
+			warning();
+		}
 	}
 	
 
@@ -195,7 +232,7 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
 		}
 	}
 
-	void updateService(boolean value) {		
+	void updateService(boolean value) {
 		if (value) {
 			restartService(true);
     	}
@@ -330,7 +367,9 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
     @Override
     public void onResume() {
     	super.onResume();
-    	
+        
+        versionUpdate();
+
     	resize();
 
     	settings.load(options);
@@ -340,8 +379,7 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
 		updateNotification();
 		updateVolume();
 
-		ad.setVisibility(havePaidApp() ? View.GONE : View.VISIBLE);
-		
+//		ad.setVisibility(havePaidApp() ? View.GONE : View.VISIBLE);		
     }
     
     private boolean have(String p) {
