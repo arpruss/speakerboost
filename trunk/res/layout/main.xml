@@ -81,7 +81,7 @@
         android:layout_alignParentLeft="true"
         android:layout_toLeftOf="@id/setup_button"
         android:layout_centerVertical="true"
-        android:text="Warning: More than 40% boost may damage speakers/hearing." />
+        android:text="Warning: Playing audio at high volumes may damage speakers/hearing.  ALL USE IS AT YOUR OWN RISK.  Particularly beware of boosts above 40%, especially with music." />
    		</RelativeLayout>    
     
     <LinearLayout 
@@ -90,7 +90,7 @@
         android:gravity="center_horizontal"
         android:orientation="horizontal"
         >
-    <TextView
+<!--     <TextView
         android:id="@+id/ad"
         android:layout_width="220sp"
         android:layout_height="wrap_content"
@@ -100,6 +100,6 @@
         android:paddingRight="5sp"
         android:paddingTop="10sp"
         android:text="Tap here for more ω-Centauri apps, including the popular ScreenDim dimmer."
-        android:textColor="#0000FF" />
+        android:textColor="#0000FF" />  -->
 </LinearLayout>    
 </LinearLayout>
