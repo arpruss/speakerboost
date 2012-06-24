@@ -11,4 +11,9 @@
 	android:entryValues="@array/notifications"
 	android:key="notification"
 	android:defaultValue="2"/>
+<CheckBoxPreference 
+    android:title="Non-uniform boost"
+    android:summary="This moderates low and high frequency boosts, improving voice audibility and MAYBE decreasing speaker destruction danger." 
+    android:key="shape"
+    android:defaultValue="true"/>
 </PreferenceScreen>

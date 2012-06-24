@@ -19,7 +19,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.media.AudioManager;
-import android.media.audiofx.Equalizer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -90,6 +89,10 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
 
 		options = PreferenceManager.getDefaultSharedPreferences(this);
 		settings = new Settings(this);
+		
+		if (! settings.haveEqualizer()) {
+			fatalError("Error", "Your device is not supported by SpeakerBoost.");
+		}
 		
 		boolean o = options.getBoolean(Options.PREF_VOLUME, Options.defaultShowVolume());
 		/* This ensures that the default shows up correctly in the settings screen.
@@ -178,7 +181,15 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
 
 	}
 	
+	private void fatalError(String title, String msg) {
+		message(title, msg, true);
+	}
+	
 	private void message(String title, String msg) {
+		message(title, msg, false);
+	}
+	
+	private void message(String title, String msg, final Boolean exit) {
 		AlertDialog alertDialog = new AlertDialog.Builder(this).create();
 
 		alertDialog.setTitle(title);
@@ -186,11 +197,14 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
 		alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, 
 				"OK", 
 				new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {} });
+			public void onClick(DialogInterface dialog, int which) {
+				if (exit) SpeakerBoost.this.finish();} });
 		alertDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-			public void onCancel(DialogInterface dialog) {} });
+			public void onCancel(DialogInterface dialog) {
+				if (exit) SpeakerBoost.this.finish();
+				
+			} });
 		alertDialog.show();
-
 	}
 	
 	private void show(String title, String filename) {

@@ -24,18 +24,19 @@ public class Options extends PreferenceActivity {
 	public static final String PREF_WARNED_LAST_VERSION = "warnedLastVersion";
 	public static String PREF_LAST_VERSION = "lastVersion1";
 	public static String PREF_VOLUME = "volumeControl";
+	public static String PREF_SHAPE = "shape";
 	
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 		
 		addPreferencesFromResource(R.xml.options);
-
-		Preference p = getPreferenceScreen().findPreference(PREF_VOLUME);
-		if (p != null) {
-			SpeakerBoost.log("Setting PREF_VOLUME to "+defaultShowVolume());
-			p.setDefaultValue(defaultShowVolume());
-		}
+//
+//		Preference p = getPreferenceScreen().findPreference(PREF_VOLUME);
+//		if (p != null) {
+//			SpeakerBoost.log("Setting PREF_VOLUME to "+defaultShowVolume());
+//			p.setDefaultValue(defaultShowVolume());
+//		}
 	}
 	
 	@Override

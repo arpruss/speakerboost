@@ -12,6 +12,7 @@ public class Settings {
 	public short bands;
 	public short rangeLow;
 	public short rangeHigh;
+	public boolean shape = true;
 	
 	private Equalizer eq;
 
@@ -29,16 +30,22 @@ public class Settings {
 			catch (UnsupportedOperationException e) {
 				eq = null;
 			}
+			catch (IllegalArgumentException e) {
+				SpeakerBoost.log("Exception "+e);
+				eq = null;
+			}
 		}
 	}
 	
 	public void load(SharedPreferences pref) {
     	boostValue = pref.getInt(Options.PREF_BOOST, 0);
+    	shape = pref.getBoolean(Options.PREF_SHAPE, true);
 	}
 	
 	public void save(SharedPreferences pref) {
     	SharedPreferences.Editor ed = pref.edit();
     	ed.putInt(Options.PREF_BOOST, boostValue);
+    	ed.putBoolean(Options.PREF_SHAPE, shape);
     	ed.commit();
 	}
 	
@@ -59,9 +66,22 @@ public class Settings {
     		v = rangeHigh;
 
     	for (short i=0; i<bands; i++) {
-        	SpeakerBoost.log("boost "+i+" to "+v);
+        	
+        	short adj = v;
+        	
+        	if (shape) {
+	    		int hz = eq.getCenterFreq(i)/1000;
+	        	if (hz < 150)
+	        		adj = 0;
+	        	else if (hz < 250)
+	        		adj = (short)(v/2);
+	        	else if (hz > 8000)
+	        		adj = (short)(3*(int)v/4);
+        	}
 
-    		eq.setBandLevel(i, v);
+        	SpeakerBoost.log("boost "+i+" ("+(eq.getCenterFreq(i)/1000)+"hz) to "+adj);        	
+
+        	eq.setBandLevel(i, adj);
     	}
     	
     	eq.setEnabled(v > 0);
