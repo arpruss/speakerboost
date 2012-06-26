@@ -24,10 +24,15 @@ public class Settings {
 		        eq = new Equalizer(0, 0);
 				bands = eq.getNumberOfBands();
 				
+				SpeakerBoost.log("Set up equalizer, have "+bands+" bands");
+				
 				rangeLow = eq.getBandLevelRange()[0];
 				rangeHigh = eq.getBandLevelRange()[1];
+
+				SpeakerBoost.log("range "+rangeLow+ " "+rangeHigh);
 			}
 			catch (UnsupportedOperationException e) {
+				SpeakerBoost.log("Exception "+e);
 				eq = null;
 			}
 			catch (IllegalArgumentException e) {
