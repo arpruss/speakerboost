@@ -49,7 +49,7 @@ import android.widget.TextView;
 
 public class SpeakerBoost extends Activity implements ServiceConnection {
 	private static boolean DEBUG = true;
-	static final String MARKET = "Market";
+	static final String MARKET = "Appstore";
 	private SharedPreferences options;
 	private Messenger messenger;
 	private int SLIDER_MAX = 10000;
@@ -387,6 +387,13 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
     	resize();
 
     	settings.load(options);
+    	
+    	int maxBoost = Options.getMaximumBoost(options);
+    	boostBar.setMax(SLIDER_MAX * maxBoost / 100);
+    	if (settings.boostValue > settings.rangeHigh * maxBoost / 100) {
+    		settings.boostValue = settings.rangeHigh * maxBoost / 100;
+    		settings.save(options);
+    	}
 
     	setupEqualizer();		
 		updateService();

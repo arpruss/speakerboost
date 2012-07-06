@@ -85,6 +85,7 @@ public class Settings {
         	}
 
         	SpeakerBoost.log("boost "+i+" ("+(eq.getCenterFreq(i)/1000)+"hz) to "+adj);        	
+        	SpeakerBoost.log("previous value "+eq.getBandLevel(i));
 
         	eq.setBandLevel(i, adj);
     	}

@@ -16,4 +16,10 @@
     android:summary="This moderates low and high frequency boosts, improving voice audibility and MAYBE decreasing speaker destruction danger." 
     android:key="shape"
     android:defaultValue="true"/>
+<ListPreference
+	android:title="Maximum allowed boost"
+	android:entries="@array/maximum_boost_labels"    	
+	android:entryValues="@array/maximum_boosts"
+	android:key="maximumBoost"
+	android:defaultValue="100"/>
 </PreferenceScreen>
