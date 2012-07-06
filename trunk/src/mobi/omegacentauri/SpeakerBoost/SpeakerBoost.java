@@ -49,7 +49,7 @@ import android.widget.TextView;
 
 public class SpeakerBoost extends Activity implements ServiceConnection {
 	private static boolean DEBUG = true;
-	static final String MARKET = "Appstore";
+	static final String MARKET = "Market";
 	private SharedPreferences options;
 	private Messenger messenger;
 	private int SLIDER_MAX = 10000;
