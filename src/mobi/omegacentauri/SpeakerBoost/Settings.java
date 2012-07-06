@@ -21,7 +21,7 @@ public class Settings {
 		
 		if (9 <= Build.VERSION.SDK_INT) {
 			try {
-		        eq = new Equalizer(0, 0);
+		        eq = new Equalizer(87654321, 0);
 				bands = eq.getNumberOfBands();
 				
 				SpeakerBoost.log("Set up equalizer, have "+bands+" bands");
