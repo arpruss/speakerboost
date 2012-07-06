@@ -22,9 +22,10 @@ public class Options extends PreferenceActivity {
 	public static final String PREF_AD = "lastAd";
 	public static final String PREF_BOOST = "boost";
 	public static final String PREF_WARNED_LAST_VERSION = "warnedLastVersion";
-	public static String PREF_LAST_VERSION = "lastVersion1";
-	public static String PREF_VOLUME = "volumeControl";
-	public static String PREF_SHAPE = "shape";
+	public static final String PREF_LAST_VERSION = "lastVersion1";
+	public static final String PREF_VOLUME = "volumeControl";
+	public static final String PREF_SHAPE = "shape";
+	public static final String PREF_MAXIMUM_BOOST = "maximumBoost";
 	
 	@Override
 	public void onCreate(Bundle icicle) {
@@ -64,5 +65,9 @@ public class Options extends PreferenceActivity {
 	
 	public static boolean defaultShowVolume() {
 		return isKindle();
+	}
+	
+	public static int getMaximumBoost(SharedPreferences options) {
+		return Integer.parseInt(options.getString(PREF_MAXIMUM_BOOST, "100"));
 	}
 }
