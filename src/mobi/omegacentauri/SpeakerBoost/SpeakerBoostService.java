@@ -3,6 +3,7 @@ package mobi.omegacentauri.SpeakerBoost;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,7 +49,7 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class SpeakerBoostService extends Service implements SensorEventListener {
+public class SpeakerBoostService extends Service {
 	
 	private final Messenger messenger = new Messenger(new IncomingHandler());
 	private static final int PROXIMITY_SCREEN_OFF_WAKE_LOCK = 32;
@@ -58,6 +59,10 @@ public class SpeakerBoostService extends Service implements SensorEventListener 
 	private KeyguardManager km;
 	private WakeLock wakeLock = null;
 	private KeyguardLock guardLock = null;
+	protected boolean interruptReader;
+//	private Thread logThread;
+//	private Process logProcess;
+	private long t0;
 	private static final String PROXIMITY_TAG = "mobi.omegacentauri.SpeakerBoost.EarpieceService.proximity";
 	private static final String GUARD_TAG = "mobi.omegacentauri.SpeakerBoost.EarpieceService.guard";
  	
@@ -87,12 +92,13 @@ public class SpeakerBoostService extends Service implements SensorEventListener 
 	
 	@Override
 	public void onCreate() {
-		SpeakerBoost.log("Creating service");
+		t0 = System.currentTimeMillis();
+		SpeakerBoost.log("Creating service at "+t0);
 		options = PreferenceManager.getDefaultSharedPreferences(this);
 	    pm = (PowerManager)getSystemService(POWER_SERVICE);
 	    km = (KeyguardManager)getSystemService(KEYGUARD_SERVICE);
 		
-		settings = new Settings(this);
+		settings = new Settings(this, true);
 		settings.load(options);
 
 		if (Options.getNotify(options) != Options.NOTIFY_NEVER) {
@@ -117,16 +123,39 @@ public class SpeakerBoostService extends Service implements SensorEventListener 
 			settings.setEqualizer();
 		else
 			settings.disableEqualizer();
+		
+//		if (settings.override) {
+//	        Runnable logRunnable = new Runnable(){
+//	        	@Override
+//	        	public void run() {
+//	                interruptReader = false;
+//					monitorLog();
+//				}};  
+//			logThread = new Thread(logRunnable);
+//			
+//			logThread.start();
+//		}
 	}
 	
 	@Override
 	public void onDestroy() {
 		settings.load(options);
-//		if (settings.isEqualizerActive()) {
-			SpeakerBoost.log("disabling equalizer");
-			settings.disableEqualizer();
+		SpeakerBoost.log("disabling equalizer");
+		settings.destroyEqualizer();
+
+//		if (logThread != null) {
+//			interruptReader = true;
+//			try {
+//				if (logProcess != null) {
+//					SpeakerBoost.log("Destroying service, killing reader");
+//					logProcess.destroy();
+//				}
+//				// logThread = null;
+//			}
+//			catch (Exception e) {
+//			}  
 //		}
-		disableProximity();
+
 		SpeakerBoost.log("Destroying service");
 		if(Options.getNotify(options) != Options.NOTIFY_NEVER)
 			stopForeground(true);
@@ -142,34 +171,72 @@ public class SpeakerBoostService extends Service implements SensorEventListener 
 		return START_STICKY;
 	}
 	
-	private void activateProximity() {
-		wakeLock = pm.newWakeLock(PROXIMITY_SCREEN_OFF_WAKE_LOCK, 
-				PROXIMITY_TAG);
-		wakeLock.acquire();
-		guardLock = km.newKeyguardLock(GUARD_TAG);
-		guardLock.disableKeyguard();
-	}
-	
-	private void disableProximity() {
-		if (null != wakeLock) {
-			wakeLock.release();
-			wakeLock = null;
-		}
-		if (null != guardLock) {
-			guardLock.reenableKeyguard();
-			guardLock = null;
-		}		
-	}
-	
-	@Override
-	public void onAccuracyChanged(Sensor arg0, int arg1) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onSensorChanged(SensorEvent event) {
-		
-	}
-
+//	private void monitorLog() {
+//		Random x = new Random();
+//		BufferedReader logReader;
+//
+//		for(;;) {
+//			logProcess = null;
+//
+//			String marker = "mobi.omegacentauri.SpeakerBoost:marker:"+System.currentTimeMillis()+":"+x.nextLong()+":";
+//			
+//			try {
+//				SpeakerBoost.log("logcat monitor starting");
+//				Log.i("SpeakerBoostMarker", marker);
+//				String[] cmd2 = { "logcat", "SpeakerBoostMarker:I", "AudioPolicyManager:V", "*:S" };
+//				logProcess = Runtime.getRuntime().exec(cmd2);
+//				logReader = new BufferedReader(new InputStreamReader(logProcess.getInputStream()));
+//				Pattern pattern = Pattern.compile(
+//					"(start|stop)Output\\(\\)\\s+output\\s+[0-9]+,\\s+stream\\s+([0-9]+),\\s+session\\s+([0-9]+)");
+//				SpeakerBoost.log("reading");
+//
+//				String line;
+//				while (null != (line = logReader.readLine())) {
+//					if (interruptReader)
+//						break;
+//					
+//					if (marker != null) {
+//						if (line.contains(marker)) {
+//							marker = null;
+//							continue;
+//						}
+//					}
+//					
+//					Matcher m = pattern.matcher(line);
+//					
+//					if (m.find()) {
+//						if (m.group(1).equals("start")) 
+//							settings.addSession(
+//									Integer.parseInt(m.group(2)),
+//											Integer.parseInt(m.group(3)));
+//						else if (m.group(1).equals("stop"))
+//							settings.deleteSession(
+//									Integer.parseInt(m.group(3)));
+//					}
+//				}
+//
+//				logReader.close();
+//				logReader = null;
+//			}
+//			catch(IOException e) {
+//				SpeakerBoost.log("logcat: "+e);
+//
+//				if (logProcess != null)
+//					logProcess.destroy();
+//			}
+//
+//            
+//			if (interruptReader) {
+//				SpeakerBoost.log("reader interrupted");
+//			    return;
+//			}
+//
+//			SpeakerBoost.log("logcat monitor died");
+//			
+//			try {
+//				Thread.sleep(5000);
+//			} catch (InterruptedException e) {
+//			}
+//		}
+//	}
 }

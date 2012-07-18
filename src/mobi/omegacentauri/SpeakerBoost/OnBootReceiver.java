@@ -11,7 +11,7 @@ public class OnBootReceiver extends BroadcastReceiver {
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		Settings settings = new Settings(context);
+		Settings settings = new Settings(context, false);
 		settings.load(PreferenceManager.getDefaultSharedPreferences(context));
 		
 		if (settings.needService()) {
