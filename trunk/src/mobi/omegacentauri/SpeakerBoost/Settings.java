@@ -1,5 +1,7 @@
 package mobi.omegacentauri.SpeakerBoost;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.hardware.SensorManager;
@@ -12,16 +14,21 @@ public class Settings {
 	public short bands;
 	public short rangeLow;
 	public short rangeHigh;
+//	public boolean override;
 	public boolean shape = true;
-	
+	private boolean released = true;;
+	private ArrayList<SessionEqualizer> eqs;
+	private static final int PRIORITY = 87654322; // Integer.MAX_VALUE;
+	                                   
 	private Equalizer eq;
 
-	public Settings(Context context) {
+	public Settings(Context context, boolean activeEqualizer) {
 		eq = null;
+		eqs = new ArrayList<SessionEqualizer>();
 		
 		if (9 <= Build.VERSION.SDK_INT) {
 			try {
-		        eq = new Equalizer(87654321, 0);
+		        eq = new Equalizer(activeEqualizer ? Integer.MIN_VALUE : PRIORITY, 0);
 				bands = eq.getNumberOfBands();
 				
 				SpeakerBoost.log("Set up equalizer, have "+bands+" bands");
@@ -30,6 +37,14 @@ public class Settings {
 				rangeHigh = eq.getBandLevelRange()[1];
 
 				SpeakerBoost.log("range "+rangeLow+ " "+rangeHigh);
+				
+				if (!activeEqualizer) {
+					eq.release();
+					released = true;
+				}
+				else {
+					released = false;
+				}
 			}
 			catch (UnsupportedOperationException e) {
 				SpeakerBoost.log("Exception "+e);
@@ -44,20 +59,36 @@ public class Settings {
 	
 	public void load(SharedPreferences pref) {
     	boostValue = pref.getInt(Options.PREF_BOOST, 0);
+    	int maxBoost = Options.getMaximumBoost(pref) * rangeHigh / 100;
+    	if (boostValue > maxBoost)
+    		boostValue = maxBoost;
     	shape = pref.getBoolean(Options.PREF_SHAPE, true);
+//    	override = false; // pref.getBoolean(Options.PREF_OVERRIDE, false);
 	}
 	
 	public void save(SharedPreferences pref) {
     	SharedPreferences.Editor ed = pref.edit();
     	ed.putInt(Options.PREF_BOOST, boostValue);
-    	ed.putBoolean(Options.PREF_SHAPE, shape);
+//    	ed.putBoolean(Options.PREF_OVERRIDE, override);
     	ed.commit();
 	}
 	
 	public void setEqualizer() {
+//		if (override) {
+//			for (SessionEqualizer e: eqs) {
+//				SpeakerBoost.log("Setting equalizer for session "+e.session);
+//				setEqualizer(e);
+//			}
+//		}
+//		else {
+			setEqualizer(eq);
+//		}
+	}
+	
+	public void setEqualizer(Equalizer e) {
 		SpeakerBoost.log("setEqualizer "+boostValue);
 		
-		if (eq == null) 
+		if (e == null) 
 			return;
 		
 		short v;
@@ -69,7 +100,7 @@ public class Settings {
     	
     	if (v > rangeHigh)
     		v = rangeHigh;
-
+    	
     	for (short i=0; i<bands; i++) {
         	
         	short adj = v;
@@ -87,10 +118,15 @@ public class Settings {
         	SpeakerBoost.log("boost "+i+" ("+(eq.getCenterFreq(i)/1000)+"hz) to "+adj);        	
         	SpeakerBoost.log("previous value "+eq.getBandLevel(i));
 
-        	eq.setBandLevel(i, adj);
+        	try {
+        		e.setBandLevel(i, (short) adj); 
+        	}
+        	catch (Exception exc) {
+        		SpeakerBoost.log("Error "+exc);
+        	}
     	}
     	
-    	eq.setEnabled(v > 0);
+    	e.setEnabled(v != 0);
 	}
 	
 	public void setAll() {
@@ -101,11 +137,32 @@ public class Settings {
 		return eq != null;
 	}
 
-	public void disableEqualizer() {
+	
+	public void destroyEqualizer() {
+		disableEqualizer();
 		if (eq != null) {
+			SpeakerBoost.log("Destroying equalizer");
+			eq.release();
+			released = true;
+			eq = null;
+		}
+		
+//		if (override) {
+//			for (SessionEqualizer e: eqs) 
+//				e.release();
+//			eqs = null;
+//		}
+	}
+
+	public void disableEqualizer() {
+		if (eq != null && ! released) {
 			SpeakerBoost.log("Closing equalizer");
 			eq.setEnabled(false);
 		}
+		
+//		if (override) 
+//			for (SessionEqualizer e: eqs)
+//				e.setEnabled(false);
 	}
 	
 	public boolean haveProximity() {
@@ -145,7 +202,52 @@ public class Settings {
 			if (i+1<count)
 				out += ", ";
 		}
-		
 		return out;
+	}
+
+	public void addSession(int stream, int session) {
+		SpeakerBoost.log("Adding session "+session+" (stream "+stream+")");
+		deleteSession(session);
+		
+		SessionEqualizer e = new SessionEqualizer(stream, session, PRIORITY); 
+		eqs.add(e);
+		setEqualizer(e);
+	}
+	
+	public void deleteSession(int session) {
+		SpeakerBoost.log("Deleting session "+session);
+		ArrayList<SessionEqualizer> newEqs = new ArrayList<SessionEqualizer>();
+		
+		for (SessionEqualizer e: eqs) {
+			if (e.session == session) {
+				e.setEnabled(false);
+				eqs.remove(e);
+			}
+			else {
+				newEqs.add(e);
+			}
+		}
+		
+		eqs = newEqs;
+	}
+	
+	public class SessionEqualizer extends Equalizer {
+		public int stream;
+		public int session;
+		public int priority;
+		
+		public SessionEqualizer(int stream, int session, int priority) {
+			super(priority, session);
+
+			this.stream = stream;
+			this.session = session;
+			this.priority = priority;
+			
+			SpeakerBoost.log("Creating equalizer for session "+session);
+		}
+		
+		public boolean equals(SessionEqualizer e) {
+			return e.session == session && e.stream == stream && e.priority == priority;
+		}
 	}
 }

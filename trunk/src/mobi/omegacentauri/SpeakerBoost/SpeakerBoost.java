@@ -88,7 +88,7 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
         setContentView(main);
 
 		options = PreferenceManager.getDefaultSharedPreferences(this);
-		settings = new Settings(this);
+		settings = new Settings(this, false);
 		
 		if (! settings.haveEqualizer()) {
 			fatalError("Error", "Your device is not supported by SpeakerBoost.");
@@ -371,11 +371,11 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
     	
     	if (w>h) {
     		lp.setMargins((w-h)/2,0,(w-h)/2,0);
-    		ll.setLayoutParams(lp);
     	}
     	else {
     		lp.setMargins(0,0,0,0);    		
     	}
+		ll.setLayoutParams(lp);
     }
     
     @Override

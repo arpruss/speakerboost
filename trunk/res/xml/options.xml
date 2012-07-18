@@ -16,10 +16,16 @@
     android:summary="This moderates low and high frequency boosts, improving voice clarity and MAYBE decreasing speaker destruction danger." 
     android:key="shape"
     android:defaultValue="true"/>
+<!--  <CheckBoxPreference 
+    android:title="Override"
+    android:summary="This overrides equalizer settings from apps, making Speaker Boost work with more apps, but using more system resources." 
+    android:key="override"
+    android:defaultValue="false"/>  -->
 <ListPreference
 	android:title="Maximum allowed boost"
 	android:entries="@array/maximum_boost_labels"    	
 	android:entryValues="@array/maximum_boosts"
-	android:key="maximumBoost"
-	android:defaultValue="100"/>
+	android:key="maximumBoost2"
+    android:summary="Be extra careful with boosts above 40. Even 40 or less can be dangerous." 
+	android:defaultValue="60"/>
 </PreferenceScreen>
