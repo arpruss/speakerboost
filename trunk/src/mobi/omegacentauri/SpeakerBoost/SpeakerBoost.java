@@ -49,7 +49,6 @@ import android.widget.TextView;
 
 public class SpeakerBoost extends Activity implements ServiceConnection {
 	private static boolean DEBUG = true;
-	static final String MARKET = "Market";
 	private SharedPreferences options;
 	private Messenger messenger;
 	private int SLIDER_MAX = 10000;
@@ -114,13 +113,7 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
     }
     
     void market() {
-    	Intent i = new Intent(Intent.ACTION_VIEW);
-    	i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    	if (MARKET.contains("arket"))
-    		i.setData(Uri.parse("market://search?q=pub:\"Omega Centauri Software\""));
-    	else
-    		i.setData(Uri.parse("http://www.amazon.com/gp/mas/dl/android?p=mobi.omegacentauri.ScreenDim.Full&showAll=1"));            		
-    	startActivity(i);    	
+    	MarketDetector.launch(this);
     }
     
     @Override
