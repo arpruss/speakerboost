@@ -18,7 +18,7 @@ public class Settings {
 	public boolean shape = true;
 	private boolean released = true;;
 	private ArrayList<SessionEqualizer> eqs;
-	private static final int PRIORITY = 87654322; // Integer.MAX_VALUE;
+	private static final int PRIORITY = 87654325; // Integer.MAX_VALUE;
 	                                   
 	private Equalizer eq;
 
