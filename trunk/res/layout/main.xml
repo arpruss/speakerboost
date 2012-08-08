@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dip"
             android:layout_marginLeft="00dip"
-            android:layout_marginRight="20dip"
+            android:layout_marginRight="10dip"
             android:layout_marginTop="10dip"
             android:layout_weight="1"
             android:max="10000" />
@@ -53,7 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dip"
             android:layout_marginLeft="00dip"
-            android:layout_marginRight="20dip"
+            android:layout_marginRight="10dip"
             android:layout_marginTop="10dip"
             android:layout_weight="1"
             android:max="10000" />

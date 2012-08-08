@@ -1,70 +1,25 @@
 package mobi.omegacentauri.SpeakerBoost;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Random;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import mobi.omegacentauri.SpeakerBoost.R;
-
-import android.app.KeyguardManager;
-import android.app.KeyguardManager.KeyguardLock;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.PixelFormat;
-import android.graphics.Typeface;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
-import android.location.Address;
-import android.media.AudioManager;
-import android.media.audiofx.Equalizer;
-import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
-import android.os.PowerManager;
-import android.os.PowerManager.WakeLock;
-import android.os.RemoteException;
 import android.preference.PreferenceManager;
-import android.util.Log;
-import android.util.TypedValue;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnFocusChangeListener;
-import android.view.Gravity;
-import android.view.View.OnTouchListener;
-import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 public class SpeakerBoostService extends Service {
 	
 	private final Messenger messenger = new Messenger(new IncomingHandler());
-	private static final int PROXIMITY_SCREEN_OFF_WAKE_LOCK = 32;
 	private SharedPreferences options;
 	private Settings settings;
-	private PowerManager pm;
-	private KeyguardManager km;
-	private WakeLock wakeLock = null;
-	private KeyguardLock guardLock = null;
 	protected boolean interruptReader;
 //	private Thread logThread;
 //	private Process logProcess;
 	private long t0;
-	private static final String PROXIMITY_TAG = "mobi.omegacentauri.SpeakerBoost.EarpieceService.proximity";
-	private static final String GUARD_TAG = "mobi.omegacentauri.SpeakerBoost.EarpieceService.guard";
  	
 	public class IncomingHandler extends Handler {
 		public static final int MSG_OFF = 0;
@@ -95,8 +50,6 @@ public class SpeakerBoostService extends Service {
 		t0 = System.currentTimeMillis();
 		SpeakerBoost.log("Creating service at "+t0);
 		options = PreferenceManager.getDefaultSharedPreferences(this);
-	    pm = (PowerManager)getSystemService(POWER_SERVICE);
-	    km = (KeyguardManager)getSystemService(KEYGUARD_SERVICE);
 		
 		settings = new Settings(this, true);
 		settings.load(options);
@@ -139,6 +92,8 @@ public class SpeakerBoostService extends Service {
 	
 	@Override
 	public void onDestroy() {
+		super.onDestroy();
+		
 		settings.load(options);
 		SpeakerBoost.log("disabling equalizer");
 		settings.destroyEqualizer();

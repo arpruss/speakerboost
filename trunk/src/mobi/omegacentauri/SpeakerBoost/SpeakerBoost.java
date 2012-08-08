@@ -18,6 +18,7 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.Rect;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
@@ -136,7 +137,9 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);
-		
+
+		if (MarketDetector.NO_MARKET)
+				menu.findItem(R.id.please_buy).setVisible(false);
 		return true;
 	}
 	
@@ -364,17 +367,22 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
     	FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams)ll.getLayoutParams();
     	log("resize3");
 
-    	int h = getWindowManager().getDefaultDisplay().getHeight();
-    	int w = getWindowManager().getDefaultDisplay().getWidth();
+    	Rect r = new Rect();
+    	ll.getWindowVisibleDisplayFrame(r);
+    	int h = r.height();
+    	int w = r.width();
+    	
     	
     	if (w>h) {
-    		lp.width = h * 99 / 100;
+    		lp.width = h * 89 / 100;
 //    		lp.setMargins((w-h)/2,0,(w-h)/2,0);
     	}
     	else {
-    		lp.width = w * 99 / 100;
+    		lp.width = w * 89 / 100;
 //    		lp.setMargins(0,0,0,0);    		
     	}
+    	
+    	
 		ll.setLayoutParams(lp);
     }
     
