@@ -7,7 +7,7 @@ import android.net.Uri;
 import android.os.Build;
 
 public class MarketDetector {
-	public static final boolean NO_MARKET = false;
+	public static final boolean NO_MARKET = true;
 	public static final int MARKET = 0;
 	public static final int APPSTORE = 1;
 
