@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dip"
             android:layout_marginLeft="00dip"
-            android:layout_marginRight="10dip"
+            android:layout_marginRight="20dip"
             android:layout_marginTop="10dip"
             android:layout_weight="1"
             android:max="10000" />
@@ -53,13 +53,35 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dip"
             android:layout_marginLeft="00dip"
-            android:layout_marginRight="10dip"
+            android:layout_marginRight="20dip"
             android:layout_marginTop="10dip"
             android:layout_weight="1"
             android:max="10000" />
     </LinearLayout>
-
-    <RelativeLayout 
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/warn"
+        android:layout_width="0dip"
+        android:layout_height="wrap_content"
+        android:paddingTop="10sp"
+        android:paddingBottom="10sp"
+        android:width="0dip"
+        android:layout_weight="1"
+        android:text="Warning: Playing audio at high volumes may damage speakers/hearing.  ALL USE IS AT YOUR OWN RISK.  Particularly beware of boosts above 40%, especially with music." />
+   	<ImageButton 
+   	    android:id="@+id/setup_button"
+   	    android:src="@drawable/config"
+   	    android:onClick="optionsClick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+   	    />
+    </LinearLayout>
+    
+<!--     <RelativeLayout 
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         >
@@ -72,25 +94,16 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
    	    />
-    <TextView
-        android:id="@+id/warn"
-        android:layout_width="0dip"
-        android:layout_height="wrap_content"
-        android:paddingTop="10sp"
-        android:paddingBottom="10sp"
-        android:layout_alignParentLeft="true"
-        android:layout_toLeftOf="@id/setup_button"
-        android:layout_centerVertical="true"
-        android:text="Warning: Playing audio at high volumes may damage speakers/hearing.  ALL USE IS AT YOUR OWN RISK.  Particularly beware of boosts above 40%, especially with music." />
-   		</RelativeLayout>    
+   		</RelativeLayout> -->
+   		    
     
-    <LinearLayout 
+<!--     <LinearLayout 
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" 
         android:gravity="center_horizontal"
         android:orientation="horizontal"
-        >
-<!--     <TextView
+        > 
+     <TextView
         android:id="@+id/ad"
         android:layout_width="220sp"
         android:layout_height="wrap_content"
@@ -100,6 +113,6 @@
         android:paddingRight="5sp"
         android:paddingTop="10sp"
         android:text="Tap here for more ω-Centauri apps, including the popular ScreenDim dimmer."
-        android:textColor="#0000FF" />  -->
-</LinearLayout>    
-</LinearLayout>
+        android:textColor="#0000FF" />  
+</LinearLayout> -->   
+</LinearLayout> 

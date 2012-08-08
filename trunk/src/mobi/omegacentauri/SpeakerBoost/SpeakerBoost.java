@@ -27,6 +27,7 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.preference.PreferenceManager;
+import android.text.ClipboardManager;
 import android.text.Html;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -137,6 +138,10 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
 		getMenuInflater().inflate(R.menu.main, menu);
 		
 		return true;
+	}
+	
+	public void menuButton(View v) {
+		openOptionsMenu();
 	}
 	
 	private void reloadSettings() {
@@ -363,10 +368,12 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
     	int w = getWindowManager().getDefaultDisplay().getWidth();
     	
     	if (w>h) {
-    		lp.setMargins((w-h)/2,0,(w-h)/2,0);
+    		lp.width = h * 99 / 100;
+//    		lp.setMargins((w-h)/2,0,(w-h)/2,0);
     	}
     	else {
-    		lp.setMargins(0,0,0,0);    		
+    		lp.width = w * 99 / 100;
+//    		lp.setMargins(0,0,0,0);    		
     	}
 		ll.setLayoutParams(lp);
     }
