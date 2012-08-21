@@ -20,7 +20,7 @@ public class Options extends PreferenceActivity {
 	public static final int NOTIFY_AUTO = 1;
 	public static final int NOTIFY_ALWAYS = 2;
 	public static final String PREF_AD = "lastAd";
-	public static final String PREF_BOOST = "boost";
+	public static final String PREF_BOOST = "boost2";
 	public static final String PREF_WARNED_LAST_VERSION = "warnedLastVersion";
 	public static final String PREF_LAST_VERSION = "lastVersion1";
 	public static final String PREF_VOLUME = "volumeControl";

@@ -10,6 +10,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.preference.PreferenceManager;
+import android.widget.Toast;
 
 public class SpeakerBoostService extends Service {
 	
@@ -53,6 +54,16 @@ public class SpeakerBoostService extends Service {
 		
 		settings = new Settings(this, true);
 		settings.load(options);
+		if (!settings.haveEqualizer()) {
+			Toast.makeText(this, "Error: Try later or reboot", 5000).show();
+			SpeakerBoost.log("Error setting up equalizer");
+			settings.boostValue = 0;
+			settings.save(options);
+		}
+		else {
+			Toast.makeText(this, "Equalizer activated", 5000).show();
+			SpeakerBoost.log("Success setting up equalizer");
+		}
 
 		if (Options.getNotify(options) != Options.NOTIFY_NEVER) {
 	        Notification n = new Notification(
