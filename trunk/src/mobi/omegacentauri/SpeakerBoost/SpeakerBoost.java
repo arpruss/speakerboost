@@ -16,37 +16,28 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Rect;
 import android.media.AudioManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
+import android.preference.Preference.OnPreferenceChangeListener;
+import android.preference.Preference;
 import android.preference.PreferenceManager;
-import android.text.ClipboardManager;
 import android.text.Html;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout.LayoutParams;
-import android.widget.SeekBar;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 public class SpeakerBoost extends Activity implements ServiceConnection {
@@ -63,6 +54,7 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
 	private boolean showVolume = true;
 	private boolean disable = false;
 	private int versionCode;
+//	private OnSharedPreferenceChangeListener preferenceChangeListener = null;
 	
 	static final int NOTIFICATION_ID = 1;
 
@@ -76,6 +68,8 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
+		options = PreferenceManager.getDefaultSharedPreferences(this);
+		
 		try {
 			versionCode = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
 		} catch (NameNotFoundException e) {
@@ -88,12 +82,11 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
 		main = (LinearLayout)getLayoutInflater().inflate(R.layout.main, null);
         setContentView(main);
 
-		options = PreferenceManager.getDefaultSharedPreferences(this);
 		settings = new Settings(this, false);
 		
-		if (! settings.haveEqualizer()) {
-			fatalError("Error", "Your device is not supported by SpeakerBoost.");
-		}
+//		if (! settings.haveEqualizer()) {
+//			fatalError("Error", "Your device is not supported by SpeakerBoost.");
+//		}
 		
 		boolean o = options.getBoolean(Options.PREF_VOLUME, Options.defaultShowVolume());
 		/* This ensures that the default shows up correctly in the settings screen.
@@ -156,7 +149,6 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
 
 		settings.boostValue = 0;
 		settings.save(options);
-		settings.disableEqualizer();
 		boostBar.setProgress(0);
 		reloadSettings();
 
@@ -182,9 +174,9 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
 
 	}
 	
-	private void fatalError(String title, String msg) {
-		message(title, msg, true);
-	}
+//	private void fatalError(String title, String msg) {
+//		message(title, msg, true);
+//	}
 	
 	private void message(String title, String msg) {
 		message(title, msg, false);
@@ -249,15 +241,18 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
 
 	void updateService(boolean value) {
 		if (value) {
+			log("restartService");
 			restartService(true);
     	}
 		else {
+			log("stopService");
 			stopService();
 	    	updateNotification();
 		}
     }
     
     void updateService() {
+    	log("needService = "+settings.needService());
     	updateService(settings.needService());
     }
     
@@ -274,18 +269,16 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
     void setupEqualizer() {
     	log("setupEqualizer");
 
-    	if (!settings.haveEqualizer()) {
-    		return;
-    	}
-    	
 		boostBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
 
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
+				log("progress changed");
 				if (fromUser) {
 					int oldBoost = settings.boostValue;
-					settings.boostValue = fromSlider(progress,0,settings.rangeHigh);
+					settings.boostValue = fromSlider(progress,0,Settings.NOMINAL_RANGE_HIGH);
+					log("setting "+settings.boostValue);
 					settings.save(options);
 					
 					if ((settings.boostValue==0) != (oldBoost==0)) {
@@ -308,7 +301,7 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
 		});
 
 		int progress = toSlider(options.getInt(Options.PREF_BOOST, 0), 0,
-				settings.rangeHigh);
+				settings.NOMINAL_RANGE_HIGH);
 		boostBar.setProgress(progress);
 		updateBoostText(progress);
     }
@@ -390,16 +383,31 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
     public void onResume() {
     	super.onResume();
         
+//		preferenceChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+//			
+//			@Override
+//			public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+//					String key) {
+//				if (0 == sharedPreferences.getInt(Options.PREF_BOOST, 0)) {
+//					if (boostBar != null)
+//						boostBar.setProgress(0);						
+//				}
+//			}
+//		};
+//		
+//		options.registerOnSharedPreferenceChangeListener(preferenceChangeListener);
+        
         versionUpdate();
 
     	resize();
 
     	settings.load(options);
+    	log("loaded boost = "+settings.boostValue);
     	
     	int maxBoost = Options.getMaximumBoost(options);
     	boostBar.setMax(SLIDER_MAX * maxBoost / 100);
-    	if (settings.boostValue > settings.rangeHigh * maxBoost / 100) {
-    		settings.boostValue = settings.rangeHigh * maxBoost / 100;
+    	if (settings.boostValue > settings.NOMINAL_RANGE_HIGH * maxBoost / 100) {
+    		settings.boostValue = settings.NOMINAL_RANGE_HIGH * maxBoost / 100;
     		settings.save(options);
     	}
 
@@ -434,7 +442,9 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
 			unbindService(this);
 			messenger = null;
 		}
-
+    	
+//    	if (preferenceChangeListener != null)
+//    		options.unregisterOnSharedPreferenceChangeListener(preferenceChangeListener);
     }
     
 	public static void setNotification(Context c, NotificationManager nm, Settings s) {

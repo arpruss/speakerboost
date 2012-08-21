@@ -11,24 +11,29 @@ import android.os.Build;
 
 public class Settings {
 	public int boostValue;
-	public short bands;
-	public short rangeLow;
-	public short rangeHigh;
+	private short bands;
+	private short rangeLow;
+	private short rangeHigh;
+	public static final int NOMINAL_RANGE_HIGH = 1500;
 //	public boolean override;
 	public boolean shape = true;
 	private boolean released = true;;
-	private ArrayList<SessionEqualizer> eqs;
+//	private ArrayList<SessionEqualizer> eqs;
 	private static final int PRIORITY = 87654325; // Integer.MAX_VALUE;
 	                                   
 	private Equalizer eq;
 
 	public Settings(Context context, boolean activeEqualizer) {
 		eq = null;
-		eqs = new ArrayList<SessionEqualizer>();
+		
+		if (!activeEqualizer)
+			return;
+		
+//		eqs = new ArrayList<SessionEqualizer>();
 		
 		if (9 <= Build.VERSION.SDK_INT) {
 			try {
-		        eq = new Equalizer(activeEqualizer ? PRIORITY : (PRIORITY - 100), 0);
+		        eq = new Equalizer(PRIORITY, 0);
 				bands = eq.getNumberOfBands();
 				
 				SpeakerBoost.log("Set up equalizer, have "+bands+" bands");
@@ -59,7 +64,7 @@ public class Settings {
 	
 	public void load(SharedPreferences pref) {
     	boostValue = pref.getInt(Options.PREF_BOOST, 0);
-    	int maxBoost = Options.getMaximumBoost(pref) * rangeHigh / 100;
+    	int maxBoost = Options.getMaximumBoost(pref) * NOMINAL_RANGE_HIGH / 100;
     	if (boostValue > maxBoost)
     		boostValue = maxBoost;
     	shape = pref.getBoolean(Options.PREF_SHAPE, true);
@@ -91,9 +96,7 @@ public class Settings {
 		if (e == null) 
 			return;
 		
-		short v;
-		
-		v = (short)boostValue;
+		short v = (short)( (boostValue * rangeHigh + NOMINAL_RANGE_HIGH/2) / NOMINAL_RANGE_HIGH );
 
 		if (v < 0)
     		v = 0;
@@ -170,7 +173,7 @@ public class Settings {
 	}
 	
 	public boolean isEqualizerActive() {
-		return eq != null && boostValue>0;
+		return boostValue>0;
 	}
 	
 	public boolean needService() {
@@ -205,49 +208,49 @@ public class Settings {
 		return out;
 	}
 
-	public void addSession(int stream, int session) {
-		SpeakerBoost.log("Adding session "+session+" (stream "+stream+")");
-		deleteSession(session);
-		
-		SessionEqualizer e = new SessionEqualizer(stream, session, PRIORITY); 
-		eqs.add(e);
-		setEqualizer(e);
-	}
-	
-	public void deleteSession(int session) {
-		SpeakerBoost.log("Deleting session "+session);
-		ArrayList<SessionEqualizer> newEqs = new ArrayList<SessionEqualizer>();
-		
-		for (SessionEqualizer e: eqs) {
-			if (e.session == session) {
-				e.setEnabled(false);
-				eqs.remove(e);
-			}
-			else {
-				newEqs.add(e);
-			}
-		}
-		
-		eqs = newEqs;
-	}
-	
-	public class SessionEqualizer extends Equalizer {
-		public int stream;
-		public int session;
-		public int priority;
-		
-		public SessionEqualizer(int stream, int session, int priority) {
-			super(priority, session);
-
-			this.stream = stream;
-			this.session = session;
-			this.priority = priority;
-			
-			SpeakerBoost.log("Creating equalizer for session "+session);
-		}
-		
-		public boolean equals(SessionEqualizer e) {
-			return e.session == session && e.stream == stream && e.priority == priority;
-		}
-	}
+//	public void addSession(int stream, int session) {
+//		SpeakerBoost.log("Adding session "+session+" (stream "+stream+")");
+//		deleteSession(session);
+//		
+//		SessionEqualizer e = new SessionEqualizer(stream, session, PRIORITY); 
+//		eqs.add(e);
+//		setEqualizer(e);
+//	}
+//	
+//	public void deleteSession(int session) {
+//		SpeakerBoost.log("Deleting session "+session);
+//		ArrayList<SessionEqualizer> newEqs = new ArrayList<SessionEqualizer>();
+//		
+//		for (SessionEqualizer e: eqs) {
+//			if (e.session == session) {
+//				e.setEnabled(false);
+//				eqs.remove(e);
+//			}
+//			else {
+//				newEqs.add(e);
+//			}
+//		}
+//		
+//		eqs = newEqs;
+//	}
+//	
+//	public class SessionEqualizer extends Equalizer {
+//		public int stream;
+//		public int session;
+//		public int priority;
+//		
+//		public SessionEqualizer(int stream, int session, int priority) {
+//			super(priority, session);
+//
+//			this.stream = stream;
+//			this.session = session;
+//			this.priority = priority;
+//			
+//			SpeakerBoost.log("Creating equalizer for session "+session);
+//		}
+//		
+//		public boolean equals(SessionEqualizer e) {
+//			return e.session == session && e.stream == stream && e.priority == priority;
+//		}
+//	}
 }
