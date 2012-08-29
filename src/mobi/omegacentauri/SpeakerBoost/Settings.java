@@ -104,32 +104,37 @@ public class Settings {
     	if (v > rangeHigh)
     		v = rangeHigh;
     	
-    	for (short i=0; i<bands; i++) {
-        	
-        	short adj = v;
-        	
-        	if (shape) {
-	    		int hz = eq.getCenterFreq(i)/1000;
-	        	if (hz < 150)
-	        		adj = 0;
-	        	else if (hz < 250)
-	        		adj = (short)(v/2);
-	        	else if (hz > 8000)
-	        		adj = (short)(3*(int)v/4);
-        	}
-
-        	SpeakerBoost.log("boost "+i+" ("+(eq.getCenterFreq(i)/1000)+"hz) to "+adj);        	
-        	SpeakerBoost.log("previous value "+eq.getBandLevel(i));
-
-        	try {
-        		e.setBandLevel(i, (short) adj); 
-        	}
-        	catch (Exception exc) {
-        		SpeakerBoost.log("Error "+exc);
-        	}
-    	}
     	
-    	e.setEnabled(v != 0);
+    	if (v != 0) {
+	    	e.setEnabled(true);	
+	    	
+	    	for (short i=0; i<bands; i++) {        	
+	        	short adj = v;
+	        	
+	        	if (shape) {
+		    		int hz = eq.getCenterFreq(i)/1000;
+		        	if (hz < 150)
+		        		adj = 0;
+		        	else if (hz < 250)
+		        		adj = (short)(v/2);
+		        	else if (hz > 8000)
+		        		adj = (short)(3*(int)v/4);
+	        	}
+	
+	        	SpeakerBoost.log("boost "+i+" ("+(eq.getCenterFreq(i)/1000)+"hz) to "+adj);        	
+	        	SpeakerBoost.log("previous value "+eq.getBandLevel(i));
+	
+	        	try {
+	        		e.setBandLevel(i, (short) adj); 
+	        	}
+	        	catch (Exception exc) {
+	        		SpeakerBoost.log("Error "+exc);
+	        	}
+	    	}
+    	}
+    	else {
+    		e.setEnabled(false);
+    	}    	
 	}
 	
 	public void setAll() {
