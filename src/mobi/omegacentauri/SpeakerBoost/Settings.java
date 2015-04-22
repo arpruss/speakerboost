@@ -23,6 +23,7 @@ public class Settings {
 	private short rangeLow;
 	private short rangeHigh;
 	public static final int NOMINAL_RANGE_HIGH = 1500;
+	public static final int LOUDNESS_RANGE = 750;
 //	public boolean override;
 	public boolean shape = true;
 	private boolean released = true;;
@@ -110,10 +111,12 @@ public class Settings {
 	@SuppressLint("NewApi")
 	public void setEqualizer() {
 		if (le != null) {
-			Log.v("SpeakerBoost", "setting loudness boost to "+(boostValue * NOMINAL_RANGE_HIGH / 100));
+			int gain = (boostValue * LOUDNESS_RANGE / 100);
+			Log.v("SpeakerBoost", "setting loudness boost to "+gain);
 			try {
-				le.setEnabled(boostValue > 0);
-				le.setTargetGain(boostValue * NOMINAL_RANGE_HIGH / 100);
+				if (le.getEnabled() != (gain>0)) 
+					le.setEnabled(gain > 0);
+				le.setTargetGain(gain);
 			}
 			catch(Exception e) {
 				Log.e("SpeakerBoost", "le "+e);
