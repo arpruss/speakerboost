@@ -61,7 +61,7 @@ public class SpeakerBoostService extends Service {
 			settings.save(options);
 		}
 		else {
-			Toast.makeText(this, "Equalizer activated", 5000).show();
+//			Toast.makeText(this, "Equalizer activated", 5000).show();
 			SpeakerBoost.log("Success setting up equalizer");
 		}
 
@@ -109,19 +109,6 @@ public class SpeakerBoostService extends Service {
 		SpeakerBoost.log("disabling equalizer");
 		settings.destroyEqualizer();
 
-//		if (logThread != null) {
-//			interruptReader = true;
-//			try {
-//				if (logProcess != null) {
-//					SpeakerBoost.log("Destroying service, killing reader");
-//					logProcess.destroy();
-//				}
-//				// logThread = null;
-//			}
-//			catch (Exception e) {
-//			}  
-//		}
-
 		SpeakerBoost.log("Destroying service");
 		if(Options.getNotify(options) != Options.NOTIFY_NEVER)
 			stopForeground(true);
@@ -136,73 +123,4 @@ public class SpeakerBoostService extends Service {
 		onStart(intent, flags);
 		return START_STICKY;
 	}
-	
-//	private void monitorLog() {
-//		Random x = new Random();
-//		BufferedReader logReader;
-//
-//		for(;;) {
-//			logProcess = null;
-//
-//			String marker = "mobi.omegacentauri.SpeakerBoost:marker:"+System.currentTimeMillis()+":"+x.nextLong()+":";
-//			
-//			try {
-//				SpeakerBoost.log("logcat monitor starting");
-//				Log.i("SpeakerBoostMarker", marker);
-//				String[] cmd2 = { "logcat", "SpeakerBoostMarker:I", "AudioPolicyManager:V", "*:S" };
-//				logProcess = Runtime.getRuntime().exec(cmd2);
-//				logReader = new BufferedReader(new InputStreamReader(logProcess.getInputStream()));
-//				Pattern pattern = Pattern.compile(
-//					"(start|stop)Output\\(\\)\\s+output\\s+[0-9]+,\\s+stream\\s+([0-9]+),\\s+session\\s+([0-9]+)");
-//				SpeakerBoost.log("reading");
-//
-//				String line;
-//				while (null != (line = logReader.readLine())) {
-//					if (interruptReader)
-//						break;
-//					
-//					if (marker != null) {
-//						if (line.contains(marker)) {
-//							marker = null;
-//							continue;
-//						}
-//					}
-//					
-//					Matcher m = pattern.matcher(line);
-//					
-//					if (m.find()) {
-//						if (m.group(1).equals("start")) 
-//							settings.addSession(
-//									Integer.parseInt(m.group(2)),
-//											Integer.parseInt(m.group(3)));
-//						else if (m.group(1).equals("stop"))
-//							settings.deleteSession(
-//									Integer.parseInt(m.group(3)));
-//					}
-//				}
-//
-//				logReader.close();
-//				logReader = null;
-//			}
-//			catch(IOException e) {
-//				SpeakerBoost.log("logcat: "+e);
-//
-//				if (logProcess != null)
-//					logProcess.destroy();
-//			}
-//
-//            
-//			if (interruptReader) {
-//				SpeakerBoost.log("reader interrupted");
-//			    return;
-//			}
-//
-//			SpeakerBoost.log("logcat monitor died");
-//			
-//			try {
-//				Thread.sleep(5000);
-//			} catch (InterruptedException e) {
-//			}
-//		}
-//	}
 }

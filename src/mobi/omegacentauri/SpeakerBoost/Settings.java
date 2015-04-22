@@ -1,13 +1,21 @@
 package mobi.omegacentauri.SpeakerBoost;
 
+import java.io.FileDescriptor;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.hardware.SensorManager;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.media.audiofx.Equalizer;
+import android.media.audiofx.LoudnessEnhancer;
 import android.os.Build;
+import android.util.Log;
 
 public class Settings {
 	public int boostValue;
@@ -21,8 +29,13 @@ public class Settings {
 //	private ArrayList<SessionEqualizer> eqs;
 	private static final int PRIORITY = 87654325; // Integer.MAX_VALUE;
 	                                   
-	private Equalizer eq;
+	private Equalizer eq = null;
+	private LoudnessEnhancer le = null;
+	private TimerTask timerTask;
+	private Timer timer;
+	private MediaPlayer mp;
 
+	@SuppressLint("NewApi")
 	public Settings(Context context, boolean activeEqualizer) {
 		eq = null;
 		
@@ -31,7 +44,23 @@ public class Settings {
 		
 //		eqs = new ArrayList<SessionEqualizer>();
 		
-		if (9 <= Build.VERSION.SDK_INT) {
+		if (19 <= Build.VERSION.SDK_INT) {
+			try {
+				le = new LoudnessEnhancer(0);
+				if (!activeEqualizer) {
+					le.release();
+					released = true;
+				}
+				else {
+					released = false;
+				}
+			}
+			catch (Exception e) {
+				SpeakerBoost.log("Exception "+e);
+				le = null;
+			}
+		}
+		else if (9 <= Build.VERSION.SDK_INT) {
 			try {
 		        eq = new Equalizer(PRIORITY, 0);
 				bands = eq.getNumberOfBands();
@@ -78,19 +107,23 @@ public class Settings {
     	ed.commit();
 	}
 	
+	@SuppressLint("NewApi")
 	public void setEqualizer() {
-//		if (override) {
-//			for (SessionEqualizer e: eqs) {
-//				SpeakerBoost.log("Setting equalizer for session "+e.session);
-//				setEqualizer(e);
-//			}
-//		}
-//		else {
+		if (le != null) {
+			Log.v("SpeakerBoost", "setting loudness boost to "+(boostValue * NOMINAL_RANGE_HIGH / 100));
+			try {
+				le.setEnabled(boostValue > 0);
+				le.setTargetGain(boostValue * NOMINAL_RANGE_HIGH / 100);
+			}
+			catch(Exception e) {
+				Log.e("SpeakerBoost", "le "+e);
+			}
+		}
+		else 
 			setEqualizer(eq);
-//		}
 	}
 	
-	public void setEqualizer(Equalizer e) {
+	private void setEqualizer(Equalizer e) {
 		SpeakerBoost.log("setEqualizer "+boostValue);
 		
 		if (e == null) 
@@ -112,7 +145,7 @@ public class Settings {
 	        	short adj = v;
 	        	
 	        	if (shape) {
-		    		int hz = eq.getCenterFreq(i)/1000;
+		    		int hz = e.getCenterFreq(i)/1000;
 		        	if (hz < 150)
 		        		adj = 0;
 		        	else if (hz < 250)
@@ -142,18 +175,33 @@ public class Settings {
 	}
 
 	public boolean haveEqualizer() {
-		return eq != null;
+		return le != null || eq != null;
 	}
 
 	
+	@SuppressLint("NewApi")
 	public void destroyEqualizer() {
 		disableEqualizer();
+		if (le != null) {
+			SpeakerBoost.log("Destroying le");
+			le.release();
+			released = true;
+			le = null;
+		}
 		if (eq != null) {
 			SpeakerBoost.log("Destroying equalizer");
 			eq.release();
 			released = true;
 			eq = null;
 		}
+//		if (timer != null) {
+//			timer.cancel();
+//			timer = null;
+//		}
+//		if (timerTask != null) {
+//			timerTask.cancel();
+//			timerTask= null;
+//		}
 		
 //		if (override) {
 //			for (SessionEqualizer e: eqs) 
@@ -162,8 +210,13 @@ public class Settings {
 //		}
 	}
 
+	@SuppressLint("NewApi")
 	public void disableEqualizer() {
-		if (eq != null && ! released) {
+		if (le != null && ! released) {
+			SpeakerBoost.log("Closing loudnessenhancer");
+			le.setEnabled(false);			
+		}
+		else if (eq != null && ! released) {
 			SpeakerBoost.log("Closing equalizer");
 			eq.setEnabled(false);
 		}

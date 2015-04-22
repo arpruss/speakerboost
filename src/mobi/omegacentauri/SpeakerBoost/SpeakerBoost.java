@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Notification;
@@ -20,6 +21,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Rect;
 import android.media.AudioManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Message;
@@ -64,7 +66,8 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
 	}
 	
     /** Called when the activity is first created. */
-    @Override
+    @SuppressLint("NewApi")
+	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
@@ -80,7 +83,10 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
         
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		main = (LinearLayout)getLayoutInflater().inflate(R.layout.main, null);
-        setContentView(main);
+		
+		if (Build.VERSION.SDK_INT>=11) setFinishOnTouchOutside(true);
+
+		setContentView(main);
 
 		settings = new Settings(this, false);
 		
