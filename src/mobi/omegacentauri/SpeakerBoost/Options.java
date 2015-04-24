@@ -30,6 +30,7 @@ public class Options extends PreferenceActivity {
 	public static final String PREF_OVERRIDE = "override";
 	public static final String PREF_FORCE = "force";
 	public static final String PREF_DONATE_MESSAGE = "donateDidMessage";
+	public static final String PREF_BOOST_ON_BOOT = "boostOnBoot";
 	
 	@Override
 	public void onCreate(Bundle icicle) {
