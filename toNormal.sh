@@ -1,7 +1,7 @@
-mv src/mobi/omegacentauri/SpeakerBoost_Donate src/mobi/omegacentauri/SpeakerBoost
+mv src/mobi/omegacentauri/SpeakerBoost_Pro src/mobi/omegacentauri/SpeakerBoost
 for x in src/mobi/omegacentauri/SpeakerBoost/*.java AndroidManifest.xml res/layout/*.xml; do
     echo Fixing $x
-    sed -i "s/omegacentauri\\.SpeakerBoost_Donate/omegacentauri.SpeakerBoost/" $x
+    sed -i "s/omegacentauri\\.SpeakerBoost_Pro/omegacentauri.SpeakerBoost/" $x
 done
 sed -i "s/android:label=\"SpeakerBoost Pro\"/android:label=\"SpeakerBoost\"/" AndroidManifest.xml
 #sed -i "s/android:label=\"ScreenDim $1\"/android:label=\"ScreenDim $2\"/" AndroidManifest.xml
