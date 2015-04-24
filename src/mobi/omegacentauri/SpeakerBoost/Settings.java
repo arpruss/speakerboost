@@ -24,26 +24,20 @@ public class Settings {
 	private short rangeHigh;
 	public static final int NOMINAL_RANGE_HIGH = 1500;
 	public static final int LOUDNESS_RANGE = 750;
-//	public boolean override;
 	public boolean shape = true;
 	private boolean released = true;;
-//	private ArrayList<SessionEqualizer> eqs;
 	private static final int PRIORITY = 87654325; // Integer.MAX_VALUE;
 	                                   
 	private Equalizer eq = null;
 	private LoudnessEnhancer le = null;
-	private TimerTask timerTask;
-	private Timer timer;
-	private MediaPlayer mp;
 
 	@SuppressLint("NewApi")
 	public Settings(Context context, boolean activeEqualizer) {
 		eq = null;
+		le = null;
 		
 		if (!activeEqualizer)
 			return;
-		
-//		eqs = new ArrayList<SessionEqualizer>();
 		
 		if (19 <= Build.VERSION.SDK_INT) {
 			try {
@@ -81,11 +75,7 @@ public class Settings {
 					released = false;
 				}
 			}
-			catch (UnsupportedOperationException e) {
-				SpeakerBoost.log("Exception "+e);
-				eq = null;
-			}
-			catch (IllegalArgumentException e) {
+			catch (Exception e) {
 				SpeakerBoost.log("Exception "+e);
 				eq = null;
 			}
@@ -197,20 +187,6 @@ public class Settings {
 			released = true;
 			eq = null;
 		}
-//		if (timer != null) {
-//			timer.cancel();
-//			timer = null;
-//		}
-//		if (timerTask != null) {
-//			timerTask.cancel();
-//			timerTask= null;
-//		}
-		
-//		if (override) {
-//			for (SessionEqualizer e: eqs) 
-//				e.release();
-//			eqs = null;
-//		}
 	}
 
 	@SuppressLint("NewApi")
@@ -223,14 +199,6 @@ public class Settings {
 			SpeakerBoost.log("Closing equalizer");
 			eq.setEnabled(false);
 		}
-		
-//		if (override) 
-//			for (SessionEqualizer e: eqs)
-//				e.setEnabled(false);
-	}
-	
-	public boolean haveProximity() {
-		return true;//sm.getSensorList(SensorManager.SENSOR_PROXIMITY).isEmpty();
 	}
 	
 	public boolean isEqualizerActive() {
@@ -258,7 +226,7 @@ public class Settings {
 		
 		count = 0;
 		if (isEqualizerActive())
-			list[count++] = "Boost is on";
+			list[count++] = "	Boost is on";
 		
 		String out = "";
 		for (int i=0; i<count; i++) {

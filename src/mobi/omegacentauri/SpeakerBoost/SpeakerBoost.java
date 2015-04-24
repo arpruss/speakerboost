@@ -113,8 +113,8 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
 //			}});
     }
     
-    void market() {
-    	MarketDetector.launch(this);
+    void market(boolean allApps) {
+    	MarketDetector.launch(this, allApps);
     }
     
     @Override
@@ -139,6 +139,10 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
 
 		if (MarketDetector.NO_MARKET)
 				menu.findItem(R.id.please_buy).setVisible(false);
+    	if (getPackageName().endsWith("_Donate"))
+    		menu.findItem(R.id.donate).setVisible(false);
+
+		
 		return true;
 	}
 	
@@ -218,6 +222,12 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
 			show("Change log", "changelog.html");
 		}
 		
+		if (! getPackageName().endsWith("_Donate") &&
+			options.getInt(Options.PREF_DONATE_MESSAGE, 0) != versionCode) {
+			options.edit().putInt(Options.PREF_DONATE_MESSAGE, versionCode).commit();
+			show("Donation information", "donation.html");
+		}
+
 		if (options.getInt(Options.PREF_WARNED_LAST_VERSION, 0) != versionCode) {
 			warning();
 		}
@@ -238,7 +248,10 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
 			show("Questions and answers", "help.html");
 			return true;
 		case R.id.please_buy:
-			market();
+			market(true);
+			return true;
+		case R.id.donate:
+			market(false);
 			return true;
 		default:
 			return false;

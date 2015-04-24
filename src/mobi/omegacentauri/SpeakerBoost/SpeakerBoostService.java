@@ -55,7 +55,7 @@ public class SpeakerBoostService extends Service {
 		settings = new Settings(this, true);
 		settings.load(options);
 		if (!settings.haveEqualizer()) {
-			Toast.makeText(this, "Error: Try later or reboot", 5000).show();
+			Toast.makeText(this, "Error: Try later or reboot", Toast.LENGTH_LONG).show();
 			SpeakerBoost.log("Error setting up equalizer");
 			settings.boostValue = 0;
 			settings.save(options);

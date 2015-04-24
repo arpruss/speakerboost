@@ -29,6 +29,7 @@ public class Options extends PreferenceActivity {
 	public static final String PREF_MAXIMUM_BOOST_OLD = "maximumBoost";
 	public static final String PREF_OVERRIDE = "override";
 	public static final String PREF_FORCE = "force";
+	public static final String PREF_DONATE_MESSAGE = "donateDidMessage";
 	
 	@Override
 	public void onCreate(Bundle icicle) {

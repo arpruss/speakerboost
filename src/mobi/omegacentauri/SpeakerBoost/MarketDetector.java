@@ -11,13 +11,17 @@ public class MarketDetector {
 	public static final int MARKET = 0;
 	public static final int APPSTORE = 1;
 
-	public static void launch(Context c) {
+	public static void launch(Context c, boolean allApps) {
     	Intent i = new Intent(Intent.ACTION_VIEW);
     	i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    	if (detect(c) == MARKET)
-    		i.setData(Uri.parse("market://search?q=pub:\"Omega Centauri Software\""));
+    	if (detect(c) == MARKET) {
+    		if (allApps) 
+    			i.setData(Uri.parse("market://search?q=pub:\"Omega Centauri Software\""));
+    		else
+    			i.setData(Uri.parse("market://details?id=mobi.omegacentauri.SpeakerBoost.Donate"));
+    	}
     	else
-    		i.setData(Uri.parse("http://www.amazon.com/gp/mas/dl/android?p=mobi.omegacentauri.ScreenDim.Full&showAll=1"));            		
+    		i.setData(Uri.parse("http://www.amazon.com/gp/mas/dl/android?p=mobi.omegacentauri.SpeakerBoost.Donate"+(allApps ? "&showAll=1" : "")));            		
     	c.startActivity(i);    	
 	}
 	
