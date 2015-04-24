@@ -5,10 +5,6 @@
     android:title="Show volume control"
     android:key="volumeControl"
     android:defaultValue="true"/>
-<CheckBoxPreference 
-    android:title="Restore boost on boot [Donate version only]"
-    android:key="boostOnBoot"
-    android:defaultValue="false"/>
 <ListPreference
 	android:title="Notification bar"
 	android:entries="@array/notification_labels"    	
