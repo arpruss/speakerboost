@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="mobi.omegacentauri.SpeakerBoost"
-    android:versionCode="32"
-    android:versionName="2.01" >
+    android:versionCode="33"
+    android:versionName="2.01.1" >
 
     <uses-sdk android:minSdkVersion="9" />
      <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
@@ -18,11 +18,13 @@
         <activity
             android:name="mobi.omegacentauri.SpeakerBoost.SpeakerBoost"
             android:theme="@style/Theme.MyDialog"
+            android:configChanges="keyboardHidden|orientation|screenLayout"
             android:label="SpeakerBoost" >
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH_LONG_PRESS" />
                 <category android:name="android.intent.category.DEFAULT" /> 
             </intent-filter>
+            
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

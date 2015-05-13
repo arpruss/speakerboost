@@ -139,7 +139,7 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
 
 		if (MarketDetector.NO_MARKET)
 				menu.findItem(R.id.please_buy).setVisible(false);
-    	if (getPackageName().endsWith("_Donate"))
+    	if (getPackageName().endsWith("_Pro"))
     		menu.findItem(R.id.donate).setVisible(false);
 
 		
@@ -222,7 +222,7 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
 			show("Change log", "changelog.html");
 		}
 		
-		if (! getPackageName().endsWith("_Donate") &&
+		if (! getPackageName().endsWith("_Pro") &&
 			options.getInt(Options.PREF_DONATE_MESSAGE, 0) != versionCode) {
 			options.edit().putInt(Options.PREF_DONATE_MESSAGE, versionCode).commit();
 			show("Donation information", "donation.html");

@@ -18,10 +18,10 @@ public class MarketDetector {
     		if (allApps) 
     			i.setData(Uri.parse("market://search?q=pub:\"Omega Centauri Software\""));
     		else
-    			i.setData(Uri.parse("market://details?id=mobi.omegacentauri.Spea"+"kerBoost_Donate"));
+    			i.setData(Uri.parse("market://details?id=mobi.omegacentauri.Spea"+"kerBoost_Pro"));
     	}
     	else
-    		i.setData(Uri.parse("http://www.amazon.com/gp/mas/dl/android?p=mobi.omegacentauri.Spea"+"kerBoost_Donate"+(allApps ? "&showAll=1" : "")));            		
+    		i.setData(Uri.parse("http://www.amazon.com/gp/mas/dl/android?p=mobi.omegacentauri.Spea"+"kerBoost_Pro"+(allApps ? "&showAll=1" : "")));            		
     	c.startActivity(i);    	
 	}
 	

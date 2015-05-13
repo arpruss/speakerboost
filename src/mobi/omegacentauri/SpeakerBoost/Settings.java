@@ -25,7 +25,7 @@ public class Settings {
 	public static final int NOMINAL_RANGE_HIGH = 1500;
 	public static final int LOUDNESS_RANGE = 750;
 	public boolean shape = true;
-	private boolean released = true;;
+	private boolean released = true;
 	private static final int PRIORITY = 87654325; // Integer.MAX_VALUE;
 	                                   
 	private Equalizer eq = null;
