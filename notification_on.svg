@@ -17,10 +17,13 @@
    inkscape:version="0.48.4 r9939"
    width="100%"
    height="100%"
-   sodipodi:docname="noun_241387_cc.svg"><metadata
+   sodipodi:docname="notification_on.svg"
+   inkscape:export-filename="C:\android\Boost\notification_on.png"
+   inkscape:export-xdpi="460.79999"
+   inkscape:export-ydpi="460.79999"><metadata
      id="metadata3023"><rdf:RDF><cc:Work
          rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><defs
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title /></cc:Work></rdf:RDF></metadata><defs
      id="defs3021" /><sodipodi:namedview
      pagecolor="#ffffff"
      bordercolor="#666666"
@@ -35,7 +38,7 @@
      id="namedview3019"
      showgrid="false"
      inkscape:zoom="3.776"
-     inkscape:cx="50"
+     inkscape:cx="8.6864407"
      inkscape:cy="62.5"
      inkscape:window-x="-4"
      inkscape:window-y="-4"
@@ -43,4 +46,5 @@
      inkscape:current-layer="svg3011" /><path
      id="path3013"
      d="M 83.135593,56.154129 H 77.28776 v 5.847833 c 0,3.229545 -2.618288,5.847833 -5.847833,5.847833 -3.229546,0 -5.847834,-2.618288 -5.847834,-5.847833 v 0 -5.847833 h -5.847833 0 c -1.496956,0 -2.992527,-0.571061 -4.134649,-1.713184 -2.284245,-2.282859 -2.284245,-5.98644 0,-8.269299 1.142122,-1.142122 2.637693,-1.713183 4.134649,-1.713183 v 0 h 5.847833 V 38.61063 c 0,-1.496957 0.571062,-2.992528 1.713184,-4.13465 2.284245,-2.284245 5.98644,-2.284245 8.269299,0 1.142122,1.142122 1.713184,2.637693 1.713184,4.13465 v 5.847833 h 5.847833 c 3.229545,0 5.847833,2.618288 5.847833,5.847833 0,3.230931 -2.618288,5.847833 -5.847833,5.847833 z M 48.051366,69.938604 c 0,3.00916 -3.264197,4.883128 -5.86308,3.366766 L 26.564495,64.191954 C 25.36693,63.493374 24.630926,62.211259 24.630926,60.825188 V 39.17476 c 0,-1.386071 0.736004,-2.668186 1.933569,-3.366766 l 15.623791,-9.113416 c 2.598883,-1.516362 5.86308,0.358992 5.86308,3.366766 v 39.87726 z M 20.758244,59.745439 c 0,2.151182 -1.743677,3.893473 -3.893473,3.893473 h -1.952974 c -2.151182,0 -3.893473,-1.743678 -3.893473,-3.893473 V 40.25451 c 0,-2.151182 1.743677,-3.893474 3.893473,-3.893474 h 1.952974 c 2.151182,0 3.893473,1.743678 3.893473,3.893474 V 59.745439 z M 81.820375,18.18 c -17.574,-17.574 -46.066,-17.574 -63.64,0 -17.574,17.574 -17.574,46.066 0,63.64 17.574,17.574 46.066,17.574 63.64,0 17.573,-17.574 17.573,-46.066 0,-63.64 z"
-     inkscape:connector-curvature="0" /></svg>
+     inkscape:connector-curvature="0"
+     style="stroke:none;fill:#ffffff" /></svg>

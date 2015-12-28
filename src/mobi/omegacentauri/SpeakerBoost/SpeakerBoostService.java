@@ -94,7 +94,7 @@ public class SpeakerBoostService extends Service {
 					"SpeakerBoost", 
 					System.currentTimeMillis());
 			Intent i = new Intent(this, SpeakerBoost.class);
-			i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		  	i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			n.flags = Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT; 
 			n.setLatestEventInfo(this, "SpeakerBoost", 
 					settings.describe(), 
