@@ -13,7 +13,7 @@
 	android:defaultValue="2"/>
 <CheckBoxPreference 
     android:title="Non-uniform boost"
-    android:summary="This moderates low and high frequency boosts, improving voice clarity and MAYBE decreasing speaker destruction danger. Has no effect on Android 4.4+." 
+    android:summary="This moderates low and high frequency boosts, improving voice clarity and MAYBE decreasing speaker destruction danger. Has no effect on most Android 4.4+ devices." 
     android:key="shape"
     android:defaultValue="true"/>
 <!--  <CheckBoxPreference 
@@ -28,4 +28,15 @@
 	android:key="maximumBoost2"
     android:summary="Be extra careful with boosts above 40. Even 40 or less can be dangerous." 
 	android:defaultValue="60"/>
+<CheckBoxPreference 
+    android:title="Remove warning"
+    android:summary="This removes the warning about damage to hearing and hardware. Of course, removing the warning does nothing to remove the danger! That's your responsibility entirely." 
+    android:key="noWarn"
+    android:defaultValue="false"/>
+  <PreferenceCategory android:title="Licenses and copyrights">
+    <PreferenceScreen
+            android:title="View information">
+        <intent android:action="mobi.omegacentauri.SpeakerBoost.LICENSE"/>
+        </PreferenceScreen>
+        </PreferenceCategory>     
 </PreferenceScreen>

@@ -5,4 +5,5 @@
     <item android:title="Settings" android:id="@+id/options"/> 
     <item android:title="More ω-Centauri apps" android:id="@+id/please_buy"/>
     <item android:title="Donate" android:id="@+id/donate"/>
+    <item android:title="Licenses" android:id="@+id/licenses"/>
 </menu>

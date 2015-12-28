@@ -253,6 +253,9 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
 		case R.id.donate:
 			market(false);
 			return true;
+		case R.id.licenses:
+			startActivity(new Intent(this, ShowLicense.class));
+			return true;
 		default:
 			return false;
 		}
@@ -401,6 +404,10 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
     @Override
     public void onResume() {
     	super.onResume();
+    	if (options.getBoolean(Options.PREF_NO_WARN, false))
+    		findViewById(R.id.warn).setVisibility(View.GONE);
+    	else
+    		findViewById(R.id.warn).setVisibility(View.VISIBLE);
         
 //		preferenceChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
 //			
@@ -468,7 +475,7 @@ public class SpeakerBoost extends Activity implements ServiceConnection {
     
 	public static void setNotification(Context c, NotificationManager nm, Settings s) {
 		Notification n = new Notification(
-				s.somethingOn()?R.drawable.equalizer:R.drawable.equalizeroff,
+				s.somethingOn()?R.drawable.equalizeron:R.drawable.equalizeroff,
 				"SpeakerBoost", 
 				System.currentTimeMillis());
 		Intent i = new Intent(c, SpeakerBoost.class);		

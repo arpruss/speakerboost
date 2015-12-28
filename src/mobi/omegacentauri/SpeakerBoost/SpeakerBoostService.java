@@ -1,10 +1,14 @@
 package mobi.omegacentauri.SpeakerBoost;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.audiofx.AudioEffect;
+import android.media.audiofx.LoudnessEnhancer;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -46,6 +50,7 @@ public class SpeakerBoostService extends Service {
 		return messenger.getBinder();
 	}
 	
+	@SuppressLint("NewApi")
 	@Override
 	public void onCreate() {
 		t0 = System.currentTimeMillis();
@@ -55,10 +60,28 @@ public class SpeakerBoostService extends Service {
 		settings = new Settings(this, true);
 		settings.load(options);
 		if (!settings.haveEqualizer()) {
-			Toast.makeText(this, "Error: Try later or reboot", Toast.LENGTH_LONG).show();
-			SpeakerBoost.log("Error setting up equalizer");
 			settings.boostValue = 0;
 			settings.save(options);
+
+			if (19 <= Build.VERSION.SDK_INT) {
+				Boolean have = false;
+				for (AudioEffect.Descriptor d : AudioEffect.queryEffects()) {
+					if (d.uuid.equals(LoudnessEnhancer.EFFECT_TYPE_LOUDNESS_ENHANCER)) {
+						have = true;
+						break;
+					}
+				}
+				if (!have) {
+					Toast.makeText(this,  "Your device doesn't support the LoudnessEnhancer effect that SpeakerBoost needs.", Toast.LENGTH_LONG).show();
+				}
+				else {
+					Toast.makeText(this, "Error: Try later or reboot", Toast.LENGTH_LONG).show();
+				}
+			}
+			else {
+				Toast.makeText(this, "Error: Try later or reboot", Toast.LENGTH_LONG).show();
+			}
+			SpeakerBoost.log("Error setting up equalizer");
 		}
 		else {
 //			Toast.makeText(this, "Equalizer activated", 5000).show();
@@ -67,7 +90,7 @@ public class SpeakerBoostService extends Service {
 
 		if (Options.getNotify(options) != Options.NOTIFY_NEVER) {
 	        Notification n = new Notification(
-					R.drawable.equalizer,
+					R.drawable.equalizeron,
 					"SpeakerBoost", 
 					System.currentTimeMillis());
 			Intent i = new Intent(this, SpeakerBoost.class);

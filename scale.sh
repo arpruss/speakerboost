@@ -7,3 +7,14 @@ for x in *.png ; do
   convert $x -scale 66.6666666666666% ../drawable-mdpi/$x
   convert $x -scale 50% ../drawable-ldpi/$x
 done
+cd ../..
+
+convert notification_on.png -resize 72x72 res/drawable-xxhdpi/equalizeron.png
+convert notification_on.png -resize 48x48 res/drawable-xhdpi/equalizeron.png
+convert notification_on.png -resize 36x36 res/drawable-hdpi/equalizeron.png
+convert notification_on.png -resize 24x24 res/drawable-mdpi/equalizeron.png
+
+convert notification_off.png -resize 72x72 res/drawable-xxhdpi/equalizeroff.png
+convert notification_off.png -resize 48x48 res/drawable-xhdpi/equalizeroff.png
+convert notification_off.png -resize 36x36 res/drawable-hdpi/equalizeroff.png
+convert notification_off.png -resize 24x24 res/drawable-mdpi/equalizeroff.png

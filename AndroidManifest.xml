@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="mobi.omegacentauri.SpeakerBoost"
-    android:versionCode="33"
-    android:versionName="2.01.1" >
+    android:versionCode="34"
+    android:versionName="2.02" >
 
     <uses-sdk android:minSdkVersion="9" />
      <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
@@ -32,6 +32,15 @@
             </intent-filter>
         </activity>
 		<activity android:name="mobi.omegacentauri.SpeakerBoost.Options" android:label="Options" />
+		        <activity android:name="ShowLicense"
+                android:label="View licenses">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="mobi.omegacentauri.SpeakerBoost.LICENSE"/>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+		
         <receiver android:name="mobi.omegacentauri.SpeakerBoost.OnBootReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

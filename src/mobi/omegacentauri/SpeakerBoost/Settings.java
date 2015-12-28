@@ -41,6 +41,7 @@ public class Settings {
 		
 		if (19 <= Build.VERSION.SDK_INT) {
 			try {
+				SpeakerBoost.log("Trying LoudnessEnhancer");
 				le = new LoudnessEnhancer(0);
 				if (!activeEqualizer) {
 					le.release();
@@ -49,13 +50,16 @@ public class Settings {
 				else {
 					released = false;
 				}
+				SpeakerBoost.log("LE set");
+				return;
 			}
 			catch (Exception e) {
-				SpeakerBoost.log("Exception "+e);
+				SpeakerBoost.log("Error "+e);
 				le = null;
 			}
 		}
-		else if (9 <= Build.VERSION.SDK_INT) {
+		
+		if (9 <= Build.VERSION.SDK_INT) {
 			try {
 		        eq = new Equalizer(PRIORITY, 0);
 				bands = eq.getNumberOfBands();
@@ -102,7 +106,7 @@ public class Settings {
 	public void setEqualizer() {
 		if (le != null) {
 			int gain = (boostValue * LOUDNESS_RANGE / 100);
-			Log.v("SpeakerBoost", "setting loudness boost to "+gain);
+			Log.v("SpeakerBoost", "setting loudness boost to "+gain+" in state "+le.getEnabled()+" "+le.hasControl());
 			try {
 				if (le.getEnabled() != (gain>0)) 
 					le.setEnabled(gain > 0);

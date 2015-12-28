@@ -31,6 +31,7 @@ public class Options extends PreferenceActivity {
 	public static final String PREF_FORCE = "force";
 	public static final String PREF_DONATE_MESSAGE = "donateDidMessage";
 	public static final String PREF_BOOST_ON_BOOT = "boostOnBoot";
+	public static final String PREF_NO_WARN = "noWarn";
 	
 	@Override
 	public void onCreate(Bundle icicle) {
